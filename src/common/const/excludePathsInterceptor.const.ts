@@ -1,0 +1,1 @@
+export const health_path = `/${process.env.API_PREFIX}/${process.env.API_VERSION}/status/health`;
