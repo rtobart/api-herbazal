@@ -1,7 +1,7 @@
 import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor} from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { health_path } from '../const/excludePathsInterceptor.const';
+import { HEALTH_PATH } from '../const/excludePathsInterceptor.const';
 
 
 @Injectable()
@@ -11,7 +11,7 @@ export class HttpLoggerInterceptor implements NestInterceptor {
     intercept(context: ExecutionContext, next: CallHandler): Observable<any>{
         const request = context.switchToHttp().getRequest();
         const { method, url } = request;
-        if (request.originalUrl == health_path) {
+        if (request.originalUrl == HEALTH_PATH) {
             return next.handle();
         }
         const message = 'REQUEST | Method: ' + method + ' | URL: ' + url;

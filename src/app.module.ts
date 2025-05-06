@@ -7,6 +7,9 @@ import { environments } from '@src/environment';
 import config from '@src/config/config';
 import { VARS } from '@src/config/envVars';
 import { HealthModule } from './health/health.module';
+import { ProductsModule } from './products/products.module';
+import { CommonModule } from './common/services/common.module';
+import { RateLimitModule } from './common/services/rate-limit/rate-limit.module';
 
 
 @Module({
@@ -32,7 +35,10 @@ import { HealthModule } from './health/health.module';
         }]
       })
     }),
-    HealthModule
+    HealthModule,
+    ProductsModule,
+    CommonModule,
+    RateLimitModule
   ],
   providers: [
     {
