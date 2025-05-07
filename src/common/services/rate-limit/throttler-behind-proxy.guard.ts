@@ -22,10 +22,21 @@ export class ThrottlerBehindProxyGuard extends ThrottlerGuard {
     const sessionKey = super.generateKey(context, suffix, name)
     const request = context.switchToHttp().getRequest()
     if (request.url.includes(HEALTH_PATH)) return sessionKey
-    Logger.error({
-      source: 'ThrottlerBehindProxyGuard.generateKey',
-      message: 'Returning original session key',
-      sessionKey,
-    });
+    try {
+      const newKey = sessionKey
+      Logger.log({
+        source: 'ThrottlerBehindProxyGuard.generateKey',
+        message: 'Returning compound session key',
+        newKey
+      })
+      return newKey
+    } catch (error) {
+      Logger.error({
+        source: 'ThrottlerBehindProxyGuard.generateKey',
+        message: 'Returning original session key',
+        error
+      })
+      return sessionKey
+    }
   }
 }

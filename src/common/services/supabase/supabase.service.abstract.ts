@@ -1,3 +1,5 @@
+import { SupabaseClient } from "@supabase/supabase-js";
+
 export abstract class SupabaseServiceAbstract {
-    abstract getAll<T>(table: string): Promise<T>
+    abstract getClient<T>(): SupabaseClient;
 }

@@ -1,22 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { SupabaseServiceAbstract } from '@src/common/services/supabase/supabase.service.abstract';
-import { PRODUCT_TABLE } from '@src/common/services/supabase/tables/products/const';
+import { ProductsTableAbstract } from '@src/common/services/database/tables/products/products.table.abstract';
 
 @Injectable()
 export class ProductsService {
   constructor(
-    private readonly supabaseService: SupabaseServiceAbstract,
+    private readonly productTableProvide: ProductsTableAbstract,
   ) {}
   create(createProductDto: CreateProductDto) {
     return 'This action adds a new product';
   }
 
   async listProducts() {
-    const data = await this.supabaseService.getAll(PRODUCT_TABLE);
-    console.log('🚀 ~ ProductsService ~ findAll ~ data:', data)
-    return `This action returns all products`;
+    const data = await this.productTableProvide.getAllWithRelations();
+    Logger.debug('🚀 ~ ProductsService ~ listProducts ~ data:', data);
+    return data;
   }
 
   findOne(id: number) {

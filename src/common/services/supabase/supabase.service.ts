@@ -12,15 +12,7 @@ export class SupabaseService extends SupabaseServiceAbstract {
             process.env.SUPABASE_KEY,
         );
     }
-    async getAll<T>(table: string): Promise<T> {
-        const { data, error } = await this.supabaseClient
-            .from(table)
-            .select('*');
-
-        if (error) {
-            throw new Error(`Error fetching data from ${table}: ${error.message}`);
-        }
-
-        return data as T;
+    getClient<T>(): SupabaseClient {
+        return this.supabaseClient;
     }
 }
