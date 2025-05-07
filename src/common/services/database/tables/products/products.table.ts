@@ -24,7 +24,7 @@ export class ProductTableService extends ProductsTableAbstract {
         return data as T;
     }
 
-    async getOneByIdWithRelations(id: string): Promise<ProductRaw | null> {
+    async getOneByIdWithRelations(id: string): Promise<ProductRaw[] | null> {
         const { data, error } = await this.supabaseClient
             .from(this.PRODUCT_TABLE)
             .select(`
@@ -99,7 +99,7 @@ export class ProductTableService extends ProductsTableAbstract {
             })) || [],
         }));
     
-        return transformedData[0];
+        return transformedData;
     }
     async getAllWithRelations(): Promise<ProductRaw[]> {
         const { data, error } = await this.supabaseClient
