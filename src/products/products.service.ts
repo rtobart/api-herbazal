@@ -14,12 +14,12 @@ export class ProductsService {
 
   async listProducts() {
     const data = await this.productTableProvide.getAllWithRelations();
-    Logger.debug('🚀 ~ ProductsService ~ listProducts ~ data:', data);
     return data;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async getProductById(id: string) {
+    const data = await this.productTableProvide.getOneByIdWithRelations(id);
+    return data;
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {

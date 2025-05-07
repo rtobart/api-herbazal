@@ -23,6 +23,84 @@ export class ProductTableService extends ProductsTableAbstract {
         }
         return data as T;
     }
+
+    async getOneByIdWithRelations(id: string): Promise<ProductRaw | null> {
+        const { data, error } = await this.supabaseClient
+            .from(this.PRODUCT_TABLE)
+            .select(`
+                id,
+                name,
+                long_description,
+                description,
+                ingredients,
+                usage,
+                cost,
+                price_min,
+                price_last,
+                price,
+                image_url,
+                data_ai_hint,
+                is_featured,
+                stock,
+                rating,
+                review_count,
+                created_at,
+                product_category( 
+                    category(id, name) 
+                ),
+                product_skin_type(
+                    skin_type(id, name)
+                ),
+                product_images(id, url, alt_text, sort_order)
+            `).eq('id', id)
+            .single();;
+    
+        // Manejo de errores
+        if (error) {
+            this.handleError(error, `fetching raw products with relations from ${this.PRODUCT_TABLE}`);
+        }
+    
+        if (!data) {
+            return null;
+        }
+        const wrapperData = [data]
+        // Transformar los datos para que coincidan con el tipo ProductRaw
+        const transformedData: ProductRaw[] = wrapperData.map((product: any) => ({
+            id: product.id,
+            name: product.name,
+            long_description: product.long_description,
+            description: product.description,
+            ingredients: product.ingredients,
+            usage: product.usage,
+            cost: product.cost,
+            price_min: product.price_min,
+            price_last: product.price_last,
+            price: product.price,
+            image_url: product.image_url,
+            data_ai_hint: product.data_ai_hint,
+            is_featured: product.is_featured,
+            stock: product.stock,
+            rating: product.rating,
+            review_count: product.review_count,
+            created_at: product.created_at,
+            product_category: product.product_category?.map((pc: any) => ({
+                id: pc.category.id,
+                name: pc.category.name,
+            })) || [],
+            product_skin_type: product.product_skin_type?.map((pst: any) => ({
+                id: pst.skin_type.id,
+                name: pst.skin_type.name,
+            })) || [],
+            product_images: product.product_images?.map((img: any) => ({
+                id: img.id,
+                url: img.url,
+                alt_text: img.alt_text,
+                sort_order: img.sort_order,
+            })) || [],
+        }));
+    
+        return transformedData[0];
+    }
     async getAllWithRelations(): Promise<ProductRaw[]> {
         const { data, error } = await this.supabaseClient
             .from(this.PRODUCT_TABLE)

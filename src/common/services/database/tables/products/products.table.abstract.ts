@@ -3,5 +3,5 @@ export abstract class ProductsTableAbstract {
     abstract getTableName<T>(): string;
     abstract getAll<T>(): Promise<T[]>;
     abstract getAllWithRelations<T>(): Promise<ProductRaw[]>;
-    // abstract getById<T>(id: number): Promise<T | null>;
+    abstract getOneByIdWithRelations<T>(id: string): Promise<ProductRaw | null>;
 }
